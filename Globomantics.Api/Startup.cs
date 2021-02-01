@@ -2,6 +2,7 @@ using System.Linq;
 using Globomantics.Api.Extenstions;
 using Globomantics.Api.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,30 +47,38 @@ namespace Globomantics.Api
 
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider provider)
         {
-            app.UseApiExceptionHandler();  // defined locally
-
-            var corsOrigins = Configuration.GetValue<string>("CORSOrigins").Split(",");
-            if (corsOrigins.Any())
+            var virtualPath = "/api";
+            app.Map(virtualPath, builder =>
             {
-                app.UseCors(builder => builder
-                    .WithOrigins(corsOrigins)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
-            }
+                builder.UseApiExceptionHandler();  // defined locally
 
-            app
-                .UseSwaggerDocumentation(Configuration, provider)
-                .UseHsts()
-                .UseHttpsRedirection()
-                .UseAuthentication()
-                .UseGlobomanticsStyleRequestLogging()
-                .UseRouting();
+                builder.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
 
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers().RequireAuthorization();
-                endpoints.MapHealthChecks("/health");
+                var corsOrigins = Configuration.GetValue<string>("CORSOrigins").Split(",");
+                if (corsOrigins.Any())
+                {
+                    builder.UseCors(bldr => bldr
+                        .WithOrigins(corsOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+                }
+
+                builder.UseSwaggerDocumentation(virtualPath, Configuration, provider);
+                //builder.UseHsts();
+                //builder.UseHttpsRedirection();
+                builder.UseAuthentication();
+                builder.UseGlobomanticsStyleRequestLogging();
+                builder.UseRouting();
+
+                builder.UseAuthorization();
+                builder.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers().RequireAuthorization();
+                    endpoints.MapHealthChecks("/health");
+                });
             });
         }
     }
