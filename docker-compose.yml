@@ -49,6 +49,14 @@ services:
     networks:
       - globonet
 
+  globosql: 
+    image: morcodou/globomantics_database
+    restart: always
+    ports:
+      - "1435:1433"
+    networks:
+      - globonet
+
   globoseq: 
     image: datalust/seq
     restart: unless-stopped

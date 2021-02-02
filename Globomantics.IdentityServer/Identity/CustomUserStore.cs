@@ -163,18 +163,18 @@ WHERE UserId = @UserId",
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            var kim = "kim@mars.com";
-            if (userId == "0")
-            {
-                return new CustomUser()
-                {
-                    UserId = 0,
-                    LoginName = kim,
-                    Email = kim,
-                    PasswordHash = @"AQAAAAEAACcQAAAAEN/BZfpTu1/NaLa7+aibN85lXMk56oa7THRyhFyV5F6DxDA9SJc6cVfNvT5tTLPy6Q==",
-                    EmailConfirmed = true
-                };
-            }
+            //var kim = "kim@mars.com";
+            //if (userId == "0")
+            //{
+            //    return new CustomUser()
+            //    {
+            //        UserId = 0,
+            //        LoginName = kim,
+            //        Email = kim,
+            //        PasswordHash = @"AQAAAAEAACcQAAAAEN/BZfpTu1/NaLa7+aibN85lXMk56oa7THRyhFyV5F6DxDA9SJc6cVfNvT5tTLPy6Q==",
+            //        EmailConfirmed = true
+            //    };
+            //}
 
 
             return await _db.QuerySingleOrDefaultAsync<CustomUser>(
@@ -191,28 +191,28 @@ WHERE UserId = @UserId",
                 throw new ArgumentNullException(nameof(normalizedUserName));
             }
 
-            var stanley = "stanley@mars.com";
-            var kim = "kim@mars.com";
-            if (string.Equals(normalizedUserName, kim, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return new CustomUser()
-                {
-                    LoginName = kim,
-                    Email = kim,
-                    PasswordHash = "AQAAAAEAACcQAAAAEN/BZfpTu1/NaLa7+aibN85lXMk56oa7THRyhFyV5F6DxDA9SJc6cVfNvT5tTLPy6Q==",
-                    EmailConfirmed = true
-                };
-            }
+            //var stanley = "stanley@mars.com";
+            //var kim = "kim@mars.com";
+            //if (string.Equals(normalizedUserName, kim, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return new CustomUser()
+            //    {
+            //        LoginName = kim,
+            //        Email = kim,
+            //        PasswordHash = "AQAAAAEAACcQAAAAEN/BZfpTu1/NaLa7+aibN85lXMk56oa7THRyhFyV5F6DxDA9SJc6cVfNvT5tTLPy6Q==",
+            //        EmailConfirmed = true
+            //    };
+            //}
 
-            if (string.Equals(normalizedUserName, stanley, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return new CustomUser()
-                {
-                    LoginName = stanley,
-                    Email = stanley,
-                    EmailConfirmed = true
-                };
-            }
+            //if (string.Equals(normalizedUserName, stanley, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return new CustomUser()
+            //    {
+            //        LoginName = stanley,
+            //        Email = stanley,
+            //        EmailConfirmed = true
+            //    };
+            //}
 
             var result = await _db.QuerySingleOrDefaultAsync<CustomUser>(
                 "SELECT * FROM GlobomanticsUser WHERE LoginName = @LoginName",
