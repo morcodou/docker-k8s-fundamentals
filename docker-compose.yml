@@ -50,10 +50,15 @@ services:
       - globonet
 
   globosql: 
-    image: morcodou/globomantics_database
+    build:
+      context: .
+      dockerfile: sql/sql.Dockerfile      
     restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Y0urStr0ngPassw0rd
     ports:
-      - "1435:1433"
+      - "1440:1433"
     networks:
       - globonet
 
