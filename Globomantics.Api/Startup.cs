@@ -60,7 +60,7 @@ namespace Globomantics.Api
                 var corsOrigins = Configuration.GetValue<string>("CORSOrigins").Split(",");
                 if (corsOrigins.Any())
                 {
-                    builder.UseCors(bldr => bldr
+                    builder.UseCors(builder => builder
                         .WithOrigins(corsOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod());
