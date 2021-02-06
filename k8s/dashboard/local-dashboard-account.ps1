@@ -1,0 +1,1 @@
+kubectl apply -f local-dashboard-account.yml
