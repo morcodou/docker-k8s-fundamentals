@@ -5,6 +5,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Globomantics.IdentityServer.Initialization
@@ -13,7 +14,7 @@ namespace Globomantics.IdentityServer.Initialization
     // https://github.com/IdentityServer/IdentityServer4.Demo/blob/main/src/IdentityServer4Demo/Config.cs
     public static class InitialConfiguration
     {
-        public static void PopulateDatabaseIfEmpty(this IApplicationBuilder app)
+        public static void PopulateDatabaseIfEmpty(this IApplicationBuilder app, IConfiguration configuration)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -21,7 +22,7 @@ namespace Globomantics.IdentityServer.Initialization
 
                 if (!context.Clients.Any())
                 {
-                    foreach (var client in GetClients())
+                    foreach (var client in GetClients(configuration))
                     {
                         context.Clients.Add(client.ToEntity());
                     }
@@ -58,9 +59,12 @@ namespace Globomantics.IdentityServer.Initialization
             }
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(IConfiguration configuration)
         {
-            
+            var coreRedirectUris = configuration.GetValue<string>("GloboClients:CoreRedirectUris");
+            var swaggerRedirectUris = configuration.GetValue<string>("GloboClients:SwaggerRedirectUris");
+            var corsOrigins = configuration.GetValue<string>("GloboClients:CORSOrigins").Split(",");
+
             return new List<Client>
             {
                 new Client
@@ -68,7 +72,7 @@ namespace Globomantics.IdentityServer.Initialization
                     ClientId = "globo-core",
                     ClientName = "Globomantics Core UI (Code with PKCE)",
 
-                    RedirectUris = { "https://www-local.globomantics.com:44395/signin-oidc" },
+                    RedirectUris = { $"{coreRedirectUris}/signin-oidc" },
                     PostLogoutRedirectUris = { "https://notused" },
 
                     ClientSecrets = { new Secret("secret".Sha256()) },
@@ -83,11 +87,11 @@ namespace Globomantics.IdentityServer.Initialization
                 {
                     ClientId = "globo-swagger",
                     ClientName = "Swagger UI for the Globomantics API",
-                    RedirectUris = { "https://www-local.globomantics.com:44395/api/oauth2-redirect.html" },
+                    RedirectUris = { $"{swaggerRedirectUris}/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { "https://notused" },
 
                     RequireConsent = false,
-                    AllowedCorsOrigins = new List<string> { "https://www-local.globomantics.com:44395" },
+                    AllowedCorsOrigins = corsOrigins,
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false,

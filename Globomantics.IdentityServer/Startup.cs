@@ -124,7 +124,7 @@ namespace Globomantics.IdentityServer
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.ApplyDatabaseSchema();
-            app.PopulateDatabaseIfEmpty();
+            app.PopulateDatabaseIfEmpty(Configuration);
 
             var forwardedHeaderOptions = new ForwardedHeadersOptions
             {
