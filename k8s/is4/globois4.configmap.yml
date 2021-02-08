@@ -5,3 +5,6 @@ metadata:
 data:    
   Email__SmtpServer: globosmtp-service 
   Email__SenderAddress: notlistening@globomantics.com 
+  GloboClients__CoreRedirectUris: http://globoui-service 
+  GloboClients__SwaggerRedirectUris: http://globoapi-service/api 
+  GloboClients__CORSOrigins: http://globoapi-service,http://globoui-service 

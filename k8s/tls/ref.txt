@@ -1,0 +1,11 @@
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout id-local.key -out id-local.crt -config id-local.conf -passin pass:Y0urStr0ngPassw0rd
+sudo openssl pkcs12 -export -out id-local.pfx -inkey id-local.key -in id-local.crt -password pass:Y0urStr0ngPassw0rd
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout seq-local.key -out seq-local.crt -config seq-local.conf -passin pass:Y0urStr0ngPassw0rd
+sudo openssl pkcs12 -export -out seq-local.pfx -inkey seq-local.key -in seq-local.crt -password pass:Y0urStr0ngPassw0rd
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout www-local.key -out www-local.crt -config www-local.conf -passin pass:Y0urStr0ngPassw0rd
+sudo openssl pkcs12 -export -out www-local.pfx -inkey www-local.key -in www-local.crt -password pass:Y0urStr0ngPassw0rd
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout api-local.key -out api-local.crt -config api-local.conf -passin pass:Y0urStr0ngPassw0rd
+sudo openssl pkcs12 -export -out api-local.pfx -inkey api-local.key -in api-local.crt -password pass:Y0urStr0ngPassw0rd
